@@ -6,10 +6,10 @@ It is a just simple tutorial or example for making simple RESTful API with Go us
 ## Installation & Run
 ```bash
 # Download this project
-go get github.com/mingrammer/go-todo-rest-api-example
+go get github.com/tnqv/todo-app
 ```
 
-Before running API server, you should set the database config with yours or set the your database config with my values on [config.go](https://github.com/mingrammer/go-todo-rest-api-example/blob/master/config/config.go)
+Before running API server, you should set the database config with yours or set the your database config with my values on [config.go](https://github.com/tnqv/todo-app/blob/master/config/config.go)
 ```go
 func GetConfig() *Config {
 	return &Config{
@@ -61,7 +61,7 @@ go build
 
 #### /projects/:title/archive
 * `PUT` : Archive a project
-* `DELETE` : Restore a project 
+* `DELETE` : Restore a project
 
 #### /projects/:title/tasks
 * `GET` : Get all tasks of a project
@@ -84,4 +84,4 @@ go build
 - [ ] Write the tests for all APIs.
 - [x] Organize the code with packages
 - [ ] Make docs with GoDoc
-- [ ] Building a deployment process 
+- [ ] Building a deployment process
