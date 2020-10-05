@@ -40,6 +40,9 @@ func (a *App) Initialize(config *config.Config) {
 
 // setRouters sets the all required routers
 func (a *App) setRouters() {
+	// Routing for health check
+	a.Get("/health-check", a.handleRequestWithoutDB(handler.GetHealthCheck))
+
 	// Routing for handling the projects
 	a.Get("/projects", a.handleRequest(handler.GetAllProjects))
 	a.Post("/projects", a.handleRequest(handler.CreateProject))
@@ -85,6 +88,14 @@ func (a *App) Run(host string) {
 }
 
 type RequestHandlerFunction func(db *gorm.DB, w http.ResponseWriter, r *http.Request)
+
+type RequestHandlerFunctionWithoutDB func(w http.ResponseWriter, r *http.Request)
+
+func (a *App) handleRequestWithoutDB(handler RequestHandlerFunctionWithoutDB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		handler(w, r)
+	}
+}
 
 func (a *App) handleRequest(handler RequestHandlerFunction) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
