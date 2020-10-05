@@ -50,4 +50,5 @@ workflows:
   running-golang-ci:
     jobs:
       - tools/test
-      - tools/lint
+      - tools/lint:
+          golangci-lint-version: 1.26.0
