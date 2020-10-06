@@ -29,3 +29,10 @@ func respondJSON(w http.ResponseWriter, status int, payload interface{}) {
 func respondError(w http.ResponseWriter, code int, message string) {
 	respondJSON(w, code, map[string]string{"error": message})
 }
+
+func GetHealthCheck(w http.ResponseWriter, r *http.Request) {
+	health := map[string]bool{
+		"alive": true,
+	}
+	respondJSON(w, http.StatusOK, health)
+}
