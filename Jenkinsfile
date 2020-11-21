@@ -36,7 +36,24 @@ pipeline {
                 }
             }
         }
-        
+
+        stage('Approval') {
+            timeout(time:3, unit:'DAYS') {
+                input 'Do I have your approval for deployment?'
+        }
+
+        stage('Deploy') {
+            steps {
+                echo '> Deploying the application to VM'
+                // install galaxy roles
+                sh "ansible-galaxy install -r /home/vu/Documents/ansible-project/go-todo-app/requirements.yml"   
+                ansiblePlaybook(
+                    vaultCredentialsId: 'AnsibleVault',
+                    inventory: '/home/vu/Documents/ansible-project/go-todo-app/inventories/vagrant/inventory',
+                    playbook: '/home/vu/Documents/ansible-project/go-todo-app/playbooks/service/main.yaml'
+                )
+            }
+        }
     }
     post {
         always {
