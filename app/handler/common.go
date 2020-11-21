@@ -32,7 +32,7 @@ func respondError(w http.ResponseWriter, code int, message string) {
 
 func GetHealthCheck(w http.ResponseWriter, r *http.Request) {
 	health := map[string]bool{
-		"is_alive": true,
+		"alive": true,
 	}
 	respondJSON(w, http.StatusOK, health)
 }

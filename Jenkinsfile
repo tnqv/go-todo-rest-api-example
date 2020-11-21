@@ -38,8 +38,10 @@ pipeline {
         }
 
         stage('Approval') {
-            timeout(time:3, unit:'DAYS') {
-                input 'Do I have your approval for deployment?'
+            steps {
+                timeout(time:3, unit:'DAYS') {
+                    input 'Do I have your approval for deployment?'
+                }
             }
         }
 
@@ -47,22 +49,14 @@ pipeline {
             steps {
                 echo '> Deploying the application to VM'
                 // install galaxy roles
-                sh "ansible-galaxy install -r /home/vu/Documents/ansible-project/go-todo-app/requirements.yml"   
+                sh "ansible-galaxy install -r provision/requirements.yaml"   
                 ansiblePlaybook(
-                    vaultCredentialsId: 'AnsibleVault',
-                    inventory: '/home/vu/Documents/ansible-project/go-todo-app/inventories/vagrant/inventory',
-                    playbook: '/home/vu/Documents/ansible-project/go-todo-app/playbooks/service/main.yaml'
+                    inventory: 'provision/inventories/vagrant',
+                    playbook: 'provision/playbooks/service/main.yaml',
+                    credentialsId: 'vagrant-insecure-private-key',
+                    disableHostKeyChecking: true
                 )
             }
-        }
-    }
-    post {
-        always {
-            emailext body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}",
-                recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
-                to: "${params.RECIPIENTS}",
-                subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}"
-            
         }
     }  
 }
